@@ -1,0 +1,7 @@
+grumphp:
+    tasks:
+        phpstan:
+            level: 9
+            ignore_patterns:
+                - /Responses\/Paginated.+\.php/
+                - /^examples\//

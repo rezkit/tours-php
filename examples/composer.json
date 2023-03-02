@@ -1,0 +1,16 @@
+{
+  "name": "rezkit/tours.examples",
+  "require": {
+    "rezkit/tours": "dev-main",
+    "vlucas/phpdotenv": "^5.5",
+    "symfony/var-dumper": "^6.2",
+    "phpdocumentor/reflection-docblock": "^5.3"
+  },
+
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../"
+    }
+  ]
+}
