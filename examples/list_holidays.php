@@ -2,7 +2,7 @@
 <?php
 
 /**
- * Lists the available holidays.
+ * Lists the available holidays, versions and departures, in a tree-like format.
  *
  * Makes use of the `Iterator` behaviour of paginated responses to automatically fetch all items.
  */
@@ -19,11 +19,17 @@ $dotenv->load();
 $client = new Client($_ENV['API_KEY'], ['base_uri' => $_ENV['API_HOST']]);
 
 $params = new ListHolidays();
-$params->limit = 5;
-$params->name = 'E';
+$params->limit = 50;
 $holidays = $client->holidays()->list($params);
 
-echo implode("\t", ["ID", "Code", "Name"]) . "\n";
 foreach($holidays as $holiday) {
-    echo implode("\t", [$holiday->getId(), $holiday->getCode(), $holiday->getName()]) . "\n";
+
+    $versions = $client->holidays()->versions($holiday->getId())->list($params);
+
+    echo '- ' . $holiday->getId() . "\n";
+
+    foreach($versions as $version) {
+        echo "  - " . $version->getId() . "\n";
+    }
+
 }

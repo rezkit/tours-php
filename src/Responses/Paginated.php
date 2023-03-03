@@ -3,8 +3,8 @@
 namespace RezKit\Tours\Responses;
 
 use Countable;
-use GuzzleHttp\Client;
 use Iterator;
+use GuzzleHttp\Client;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -59,7 +59,7 @@ class Paginated implements Countable, Iterator
     /**
      * @var T[] $data
      */
-    private array $data;
+    private array $data = [];
 
     /** @var Client Http Client interface */
     protected Client $client;
@@ -76,6 +76,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * @see count
      * @return int
      */
     public function getTotal(): int
@@ -84,6 +85,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * @internal
      * @param int $total
      */
     public function setTotal(int $total): void
@@ -92,6 +94,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * Get the maximum number of items per page
      * @return int
      */
     public function getPerPage(): int
@@ -100,6 +103,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * @internal
      * @param int $perPage
      */
     public function setPerPage(int $perPage): void
@@ -108,6 +112,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * Get the current page number
      * @return int
      */
     public function getCurrentPage(): int
@@ -116,6 +121,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * @internal
      * @param int $currentPage
      */
     public function setCurrentPage(int $currentPage): void
@@ -124,6 +130,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * Get the last page number
      * @return int
      */
     public function getLastPage(): int
@@ -132,6 +139,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * @internal
      * @param int $lastPage
      */
     public function setLastPage(int $lastPage): void
@@ -140,6 +148,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * Get the URL for the next page of data
      * @return string|null
      */
     public function getNextPageUrl(): ?string
@@ -148,6 +157,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * @internal
      * @param string|null $nextPageUrl
      */
     public function setNextPageUrl(?string $nextPageUrl): void
@@ -156,6 +166,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * Get the URL for the first page of data
      * @return string|null
      */
     public function getFirstPageUrl(): ?string
@@ -164,6 +175,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * @internal
      * @param string|null $firstPageUrl
      */
     public function setFirstPageUrl(?string $firstPageUrl): void
@@ -172,6 +184,7 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * @internal
      * @param T[] $data Data
      */
     public function setData(array $data): void
@@ -179,16 +192,31 @@ class Paginated implements Countable, Iterator
         $this->data = $data;
     }
 
+    /**
+     * Get the total count of items in the dataset
+     *
+     * @return int Total count of items in the dataset
+     */
     public function count(): int
     {
         return $this->getTotal();
     }
 
+    /**
+     * Get the current item
+     *
+     * @return T Current Item
+     */
     public function current(): mixed
     {
         return $this->data[$this->index];
     }
 
+    /**
+     * Iterate to the next item in the dataset
+     *
+     * @return void
+     */
     public function next(): void
     {
         $this->index++;
@@ -201,6 +229,10 @@ class Paginated implements Countable, Iterator
     }
 
     /**
+     * Get the key of the current item within the dataset.
+     *
+     * The key is the index position of the current item within the whole dataset:
+     *
      * @return int
      */
     public function key(): int
@@ -208,11 +240,23 @@ class Paginated implements Countable, Iterator
         return (($this->currentPage - 1)*$this->perPage) + $this->index;
     }
 
+    /**
+     * Check the iterator is valid.
+     *
+     * Once this function returns false, the iterator is no longer valid,
+     * we have reached the end of the dataset.
+     *
+     * @return bool
+     */
     public function valid(): bool
     {
         return !($this->currentPage == $this->lastPage && $this->index >= count($this->data));
     }
 
+    /**
+     * Rewind the Iterator to the start of the dataset
+     * @return void
+     */
     public function rewind(): void
     {
         if (is_string($this->getFirstPageUrl())) {

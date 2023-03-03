@@ -29,16 +29,26 @@ class Client
 {
     private GuzzleClient $client;
 
+    /**
+     * URL for the API host
+     */
     public const API_HOST = 'https://api.tours.rezkit.app';
 
     /**
-     * @param string $apiKey
-     * @param array<string, mixed> $config
+     * Create a new API Client instance
+     *
+     * @param string $apiKey RezKit Tours API Key
+     * @param array<string, mixed> $config Additional GuzzlePHP configuration options
+     * @return Client RezKit Tours API Client
      */
     public function __construct(string $apiKey, array $config = [])
     {
         if (!array_key_exists('base_uri', $config)) {
             $config['base_uri'] = static::API_HOST;
+        }
+
+        if (!array_key_exists('headers', $config)) {
+            $config['headers'] = [];
         }
 
         if (array_key_exists('handler', $config)) {
@@ -56,11 +66,22 @@ class Client
         $this->client = new GuzzleClient($config);
     }
 
+    /**
+     * Manage Holidays and their dependants
+     *
+     * @return Endpoints\Holidays Holiday management handler
+     */
     public function holidays(): Endpoints\Holidays
     {
         return new Endpoints\Holidays($this->client);
     }
 
+    /**
+     * Create a pre-configured data serialization handler
+     *
+     * @internal
+     * @return Serializer Data serialization handler
+     */
     public static function createSerializer(): Serializer
     {
         return new Serializer(
