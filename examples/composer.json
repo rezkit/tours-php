@@ -1,7 +1,7 @@
 {
   "name": "rezkit/tours.examples",
   "require": {
-    "rezkit/tours": "dev-main",
+    "rezkit/tours": "dev-feature/categories",
     "vlucas/phpdotenv": "^5.5",
     "symfony/var-dumper": "^6.2",
     "phpdocumentor/reflection-docblock": "^5.3"

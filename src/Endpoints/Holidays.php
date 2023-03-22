@@ -144,4 +144,9 @@ class Holidays extends Endpoint
     {
         return new HolidayVersions($this->client, $id);
     }
+
+    public function categories(): Categories
+    {
+        return new Categories($this->client, 'holiday');
+    }
 }
