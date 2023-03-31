@@ -5,6 +5,8 @@ class HolidayVersion extends Holiday
 {
     private string $holidayId;
 
+
+
     /**
      * @return string
      */
